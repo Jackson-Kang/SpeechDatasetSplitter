@@ -7,6 +7,7 @@ Recently proposed deep-learning based speech processing models require batch pro
 
 
 # Installation
+* strongly recommend to run under [Anaconda](https://www.anaconda.com/download) environment
 * install pre-requisite via following command.
 
 ```
@@ -14,8 +15,13 @@ pip install -r requirements.txt
 ```
 
 # How-to-use
-
-
+* upload waveform in the ```samples``` directory.
+* run script(```run.py```) via following command
+```
+python run.py
+```
+* check the segmented waveforms in ```results``` directory   
+* you may check the error report named ```result.csv```.
 
 
 # Contacts
