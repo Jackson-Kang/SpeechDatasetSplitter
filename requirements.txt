@@ -1,0 +1,4 @@
+openai-whisper==20231117
+librosa==0.10.1
+scipy==1.2.0
+setuptools-rust==1.8.1
