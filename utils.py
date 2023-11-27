@@ -20,6 +20,7 @@ def load_waveform(path, sample_rate):
 
 def save_waveform(savepath, waveform, sample_rate):
 	sf.write(savepath, waveform, sample_rate, 'PCM_16')
+	return savepath.split("/")[-1].replace(".wav", "")
 
 
 def get_filelist(dirname, file_format):
@@ -51,18 +52,28 @@ def merge_waveform_segments(waveform_segment_list):
 
 def split_long_waveform(wav, segment_list, sample_rate=22050):
 
-	splitted_waveform = []
+	transcripts, splitted_waveform_list = [], []
 	for segment in segment_list:
 		start_sec, end_sec = segment['start'], segment['end']
 		start_idx, end_idx = round(start_sec * sample_rate), round(end_sec * sample_rate)
-		splitted_waveform.append(wav[start_idx: end_idx])
-	return splitted_waveform
+		splitted_waveform_list.append(wav[start_idx: end_idx])
+		transcripts.append(segment['text'])
+
+	return splitted_waveform_list, transcripts
 
 
 def get_whisper(model_name, device):
 	model = whisper.load_model(model_name).to(device)
 	return model
 
+def write_meta(transcripts, savepath):
 
+	"""
+		Args:
+			transcripts:	[list]   list of transcript
+			savepath:	[string] path to store metadata
+	"""
 
+	with open(savepath, 'w') as f:
+		f.writelines(transcripts)
 

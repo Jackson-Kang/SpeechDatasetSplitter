@@ -21,7 +21,7 @@
 
 from config import Arguments as args
 
-from utils import load_waveform, get_filelist, merge_waveform_segments, save_waveform, get_path, get_whisper, split_long_waveform, create_dir
+from utils import load_waveform, get_filelist, merge_waveform_segments, save_waveform, get_path, get_whisper, split_long_waveform, create_dir, write_meta
 from tqdm import tqdm
 
 
@@ -58,9 +58,15 @@ def run():
 
 	print("\t [LOG] STEP 03 - Split segments")	
 	create_dir(args.RESULT_SAVEDIR)
-	splitted_waveform_list = split_long_waveform(wav, result['segments'])
-	[save_waveform("{}/{:0>4}.wav".format(args.RESULT_SAVEDIR, idx), splitted_waveform, sample_rate=args.SAMPLE_RATE) for idx, splitted_waveform in tqdm(enumerate(splitted_waveform_list), total=len(splitted_waveform_list))]
+	splitted_waveform_list, transcript_list = split_long_waveform(wav, result['segments'])
+	saved_filenames = [save_waveform("{}/{:0>4}.wav".format(args.RESULT_SAVEDIR, idx), splitted_waveform, sample_rate=args.SAMPLE_RATE) for idx, splitted_waveform in tqdm(enumerate(splitted_waveform_list), total=len(splitted_waveform_list))]
+
+	meta_lines = ["{}|{}\n".format(filename, transcript) for filename, transcript in list(zip(saved_filenames, transcript_list))]
+	write_meta(meta_lines, savepath="./report.csv")
+
 	print("\t\t Done..!\n\n")
+
+
 
 
 
